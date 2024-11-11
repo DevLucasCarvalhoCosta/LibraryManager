@@ -1,123 +1,40 @@
 
 # Gerenciador de Biblioteca
 
-Este é um projeto de uma aplicação de gerenciamento de biblioteca construída utilizando Spring Boot, Jakarta e PostgreSQL. O sistema possui funcionalidades para cadastro de livros, usuários e empréstimos, além de gerenciar as cópias de livros e identificar usuários inadimplentes.
+Este é um projeto de uma aplicação de **gerenciamento de biblioteca** desenvolvida utilizando **Spring Boot**, **Jakarta** e **PostgreSQL**. O sistema oferece funcionalidades completas para o cadastro de livros, usuários e empréstimos, além de permitir o gerenciamento de cópias de livros e a identificação de usuários inadimplentes.
 
 ## Funcionalidades
 
-- Cadastro de **livros** com informações sobre título, autor, ano e número de cópias disponíveis.
-- Cadastro de **usuários** com informações como nome, endereço e telefone.
-- Gerenciamento de **empréstimos** de livros, com controle de status (ativo, atrasado, devolvido).
-- Identificação de **usuários inadimplentes** que estão com livros atrasados.
-- Notificação de livros **atrasados** para os usuários inadimplentes.
+- **Cadastro de Livros**: Permite o registro de livros com informações detalhadas, como título, autor, ano de publicação e número de cópias disponíveis.
+- **Cadastro de Usuários**: Facilita o cadastro de usuários com informações como nome, endereço e telefone, além de permitir a identificação de inadimplentes.
+- **Gerenciamento de Empréstimos**: Controla o empréstimo de livros, incluindo o acompanhamento do status dos empréstimos (ativo, atrasado, devolvido).
+- **Identificação de Usuários Inadimplentes**: O sistema verifica automaticamente se há livros atrasados e identifica os usuários que precisam devolver os livros.
+- **Notificação de Livros Atrasados**: O sistema envia alertas automáticos para os usuários inadimplentes que estão com livros atrasados.
 
 ## Diagrama de Classes
 
-O diagrama de classes abaixo ilustra a estrutura do sistema e os relacionamentos entre as principais entidades:
+O diagrama de classes a seguir ilustra a estrutura do sistema, destacando as principais entidades e seus relacionamentos:
 
-```plantuml
-@startuml
-' Definindo a classe Livro
-class Livro {
-    +Long id
-    +String titulo
-    +String autor
-    +int ano
-    +int copiasDisponiveis
-    +getId(): Long
-    +setId(id: Long): void
-    +getTitulo(): String
-    +setTitulo(titulo: String): void
-    +getAutor(): String
-    +setAutor(autor: String): void
-    +getAno(): int
-    +setAno(ano: int): void
-    +getCopiasDisponiveis(): int
-    +setCopiasDisponiveis(copiasDisponiveis: int): void
-}
-
-' Definindo a classe Usuário
-class Usuario {
-    +Long id
-    +String nome
-    +String endereco
-    +String telefone
-    +List<Emprestimo> emprestimos
-    +getId(): Long
-    +setId(id: Long): void
-    +getNome(): String
-    +setNome(nome: String): void
-    +getEndereco(): String
-    +setEndereco(endereco: String): void
-    +getTelefone(): String
-    +setTelefone(telefone: String): void
-    +getEmprestimos(): List<Emprestimo>
-    +setEmprestimos(emprestimos: List<Emprestimo>): void
-}
-
-' Definindo a classe Emprestimo
-class Emprestimo {
-    +Long id
-    +Long usuarioId
-    +Long livroId
-    +Date dataEmprestimo
-    +Date dataDevolucao
-    +String status
-    +getId(): Long
-    +setId(id: Long): void
-    +getUsuarioId(): Long
-    +setUsuarioId(usuarioId: Long): void
-    +getLivroId(): Long
-    +setLivroId(livroId: Long): void
-    +getDataEmprestimo(): Date
-    +setDataEmprestimo(dataEmprestimo: Date): void
-    +getDataDevolucao(): Date
-    +setDataDevolucao(dataDevolucao: Date): void
-    +getStatus(): String
-    +setStatus(status: String): void
-}
-
-' Definindo o serviço Livro
-class ServicoLivro {
-    +RepositorioLivro repositorioLivro
-    +List<Livro> obterTodosLivros(): List<Livro>
-    +Livro salvarLivro(livro: Livro): Livro
-    +void atualizarCopiasDisponiveis(livroId: Long, ajuste: int): void
-    +void excluirLivro(livroId: Long): void
-}
-
-' Definindo o serviço Usuario
-class ServicoUsuario {
-    +RepositorioUsuario repositorioUsuario
-    +List<Usuario> obterTodosUsuarios(): List<Usuario>
-    +Usuario salvarUsuario(usuario: Usuario): Usuario
-    +List<Usuario> obterUsuariosInadimplentes(): List<Usuario>
-}
-
-' Definindo as relações
-ServicoLivro --> RepositorioLivro : usa
-ServicoUsuario --> RepositorioUsuario : usa
-ServicoLivro --> Livro : gerencia
-Emprestimo --> Usuario : relaciona
-Emprestimo --> Livro : relaciona
-
-@enduml
-```
+![Diagrama de Classes](Diagramas/Diagrama%20de%20classes.png)
 
 ## Executando o Projeto
 
-1. Clone este repositório.
-2. Configure o banco de dados PostgreSQL.
-3. Execute o projeto usando o comando:
+1. Clone este repositório para a sua máquina local.
+2. Configure o banco de dados PostgreSQL com as credenciais apropriadas.
+3. Execute o projeto utilizando o seguinte comando:
 
-   ```
+   ```bash
    ./mvnw spring-boot:run
    ```
 
-## Testes
+4. O sistema estará disponível em `http://localhost:8080`.
 
-Os testes automatizados estão localizados no diretório `src/test/java/com/librarymanager/service`. Para executar os testes, utilize o comando:
+## Testes Automatizados
 
-```
+Os testes automatizados estão localizados no diretório `src/test/java/com/librarymanager/service`. Para executar os testes, utilize o seguinte comando:
+
+```bash
 ./mvnw test
 ```
+
+Isso executará todos os testes e garantirá que as funcionalidades do sistema estejam funcionando conforme o esperado.

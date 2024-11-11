@@ -1,6 +1,6 @@
 package com.librarymanager.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "books")

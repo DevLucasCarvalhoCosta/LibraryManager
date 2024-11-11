@@ -27,13 +27,13 @@ public class BookService {
     }
 
     public Book updateBook(Long id, Book updatedBook) {
-        if (bookRepository.existsById(id)) {
-            updatedBook.setId(id);
-            return bookRepository.save(updatedBook);
-        }
-        return null;
+        return bookRepository.findById(id).map(book -> {
+            book.setTitle(updatedBook.getTitle());
+            book.setAuthor(updatedBook.getAuthor());
+            book.setYear(updatedBook.getYear());
+            return bookRepository.save(book);
+        }).orElse(null);
     }
-
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);
     }

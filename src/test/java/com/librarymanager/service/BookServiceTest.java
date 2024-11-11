@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class BookServiceTest {
@@ -85,25 +86,35 @@ public class BookServiceTest {
 
     @Test
     public void testUpdateBook() {
-        Long bookId = 1L;
-        Book book = new Book();
-        book.setId(bookId);
-        book.setTitle("Old Title");
-        book.setAuthor("Old Author");
-        book.setYear(2020);
-
-        when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
-
-        book.setTitle("New Title");
-        book.setAuthor("New Author");
-
-        when(bookRepository.save(book)).thenReturn(book);
-        Book updatedBook = bookService.updateBook(bookId, book);
-
-        assertNotNull(updatedBook);
-        assertEquals("New Title", updatedBook.getTitle());
-        assertEquals("New Author", updatedBook.getAuthor());
+        // Configuração inicial de um livro existente
+        Book existingBook = new Book();
+        existingBook.setId(1L);
+        existingBook.setTitle("Old Title");
+        existingBook.setAuthor("Old Author");
+        existingBook.setYear(2019);
+    
+        // Configuração do livro atualizado
+        Book updatedBook = new Book();
+        updatedBook.setTitle("New Title");
+        updatedBook.setAuthor("New Author");
+        updatedBook.setYear(2020);
+    
+        // Configuração dos mocks
+        when(bookRepository.findById(1L)).thenReturn(Optional.of(existingBook));
+        when(bookRepository.save(any(Book.class))).thenReturn(updatedBook);
+    
+        // Chamada ao método de atualização no serviço
+        Book result = bookService.updateBook(1L, updatedBook);
+    
+        // Verificações
+        assertNotNull(result, "O livro atualizado não deve ser nulo");
+        assertEquals("New Title", result.getTitle(), "O título do livro não foi atualizado corretamente");
+        assertEquals("New Author", result.getAuthor(), "O autor do livro não foi atualizado corretamente");
+    
+        // Verifica se o método save foi chamado uma vez
+        verify(bookRepository, times(1)).save(any(Book.class));
     }
+    
 
     @Test
     public void testDeleteBook() {

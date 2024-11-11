@@ -34,4 +34,8 @@ jobs:
         run: chmod +x ./mvnw
 
       - name: Build and run tests
+<<<<<<< HEAD
         run: mvn clean test
+=======
+        run: mvn clean test
+>>>>>>> f77fbbf746570b30863a2a51d3d886145aa0c827

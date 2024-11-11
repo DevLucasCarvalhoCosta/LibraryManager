@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -29,16 +28,18 @@ public class BookServiceTest {
         book.setTitle("Title");
         book.setAuthor("Author");
         book.setYear(2020);
+        book.setCopiesAvailable(5); // Novo campo para definir cópias disponíveis
 
-        Book savedBook = bookService.addBook(book);
+        Book savedBook = bookService.saveBook(book);
 
         assertNotNull(savedBook);
         assertEquals("Title", savedBook.getTitle());
+        assertEquals(5, savedBook.getCopiesAvailable());
     }
 
     @Test
     public void testListBooks() {
-        List<Book> books = bookService.listBooks();
+        List<Book> books = bookService.getAllBooks();
         assertNotNull(books);
     }
 
@@ -46,28 +47,35 @@ public class BookServiceTest {
     public void testGetBookById() {
         Book book = new Book();
         book.setTitle("Test Title");
+        book.setCopiesAvailable(3); // Definindo número de cópias
         bookRepository.save(book);
 
-        Optional<Book> foundBook = bookService.getBookById(book.getId());
+        // Buscando livro por ID
+        Optional<Book> foundBook = bookRepository.findById(book.getId());
         assertTrue(foundBook.isPresent());
+        assertEquals(3, foundBook.get().getCopiesAvailable());
     }
 
     @Test
-    public void testUpdateBook() {
-        Book existingBook = new Book();
-        existingBook.setTitle("Old Title");
-        bookRepository.save(existingBook);
+    public void testUpdateAvailableCopies() {
+        // Teste para atualizar o número de cópias disponíveis
+        Book book = new Book();
+        book.setTitle("Book Title");
+        book.setCopiesAvailable(5);
+        bookRepository.save(book);
 
-        Book updatedBook = new Book();
-        updatedBook.setTitle("New Title");
-        Book result = bookService.updateBook(existingBook.getId(), updatedBook);
-
-        assertEquals("New Title", result.getTitle());
+        // Atualizando o número de cópias disponíveis
+        bookService.updateAvailableCopies(book.getId(), 3);
+        
+        Optional<Book> updatedBook = bookRepository.findById(book.getId());
+        assertTrue(updatedBook.isPresent());
+        assertEquals(8, updatedBook.get().getCopiesAvailable()); // 5 + 3
     }
 
     @Test
     public void testDeleteBook() {
         Book book = new Book();
+        book.setCopiesAvailable(1); // Definindo cópias
         bookRepository.save(book);
         bookService.deleteBook(book.getId());
 
